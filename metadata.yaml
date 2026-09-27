@@ -1,0 +1,15 @@
+name: astrbot_plugin_codex_reset
+display_name: Codex 重置监控
+short_desc: 轮询公开重置数据，推送到 WebUI 里开启的群
+desc: |
+  只读请求 codex-reset.com 的时间线和预测。
+  已宣布的 reset，或 forecast 的 last_reset_at 向前移动，才推送到已开启的群。
+  概率升高不算重置。
+  开哪些群在插件页面增删改查，不使用群口令。
+  展示面署 Data: codex-reset.com。
+version: 0.1.0
+author: w1ndys
+repo: https://github.com/w1ndys/astrbot_plugin_codex_reset
+astrbot_version: ">=4.13"
+support_platforms:
+  - aiocqhttp

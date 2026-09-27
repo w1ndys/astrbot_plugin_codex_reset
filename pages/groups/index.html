@@ -1,0 +1,43 @@
+ <!-- 页面层：WebUI 里增删改查要推送的群。脚本必须是 module，才能等到 bridge。 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>重置监控</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Codex 重置监控</h1>
+      <p class="hint">
+        在这里增删改查要推送的群。不在列表里的群不会收到消息。
+        概率升高不算重置。展示数据来自
+        <a href="https://codex-reset.com">codex-reset.com</a>。
+      </p>
+      <section>
+        <h2>新增群</h2>
+        <label for="group-id">群号</label>
+        <input id="group-id" type="text" inputmode="numeric" placeholder="只填数字" />
+        <label for="remark">备注</label>
+        <input id="remark" type="text" maxlength="40" placeholder="可选，最多 40 字" />
+        <label class="check">
+          <input id="enabled" type="checkbox" checked />
+          开启推送
+        </label>
+        <button id="add" type="button">添加</button>
+        <p id="form-error" class="error"></p>
+      </section>
+      <section>
+        <h2>已配置的群</h2>
+        <div id="groups">加载中…</div>
+      </section>
+      <section>
+        <h2>轮询状态</h2>
+        <pre id="status">加载中…</pre>
+        <button id="refresh" type="button">刷新</button>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

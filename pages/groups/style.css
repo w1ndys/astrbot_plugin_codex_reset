@@ -1,0 +1,87 @@
+/* 页面样式。跟着 WebUI 的明暗主题走，不单独做一套配色。 */
+
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --line: #d0d0d0;
+  --muted: #666666;
+  --bad: #9b1c1c;
+}
+
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --text: #e8e8e8;
+  --line: #444444;
+  --muted: #aaaaaa;
+  --bad: #ffb4b4;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 sans-serif;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+h1,
+h2 {
+  margin: 0 0 8px;
+}
+
+section {
+  margin-top: 24px;
+}
+
+.hint,
+.muted {
+  color: var(--muted);
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+}
+
+input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+button {
+  margin-top: 12px;
+  margin-right: 8px;
+  padding: 8px 12px;
+}
+
+.error {
+  color: var(--bad);
+  min-height: 1.2em;
+}
+
+.row {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+
+pre {
+  white-space: pre-wrap;
+  border: 1px solid var(--line);
+  padding: 12px;
+}

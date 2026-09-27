@@ -1,0 +1,26 @@
+{
+  "platform_id": {
+    "description": "OneBot 平台实例 ID",
+    "type": "string",
+    "default": "",
+    "hint": "AstrBot 平台适配器的 ID，不能含冒号。填了之后，WebUI 里开启的群可以不先说话就推送。会话格式是「平台ID:GroupMessage:群号」。留空则等该群有消息后再推。"
+  },
+  "poll_seconds": {
+    "description": "轮询间隔（秒）",
+    "type": "int",
+    "default": 60,
+    "hint": "最快 60 秒一次。小于 60 也会按 60 执行，并继续遵守来源的 Cache-Control 和 429 Retry-After。"
+  },
+  "http_timeout_seconds": {
+    "description": "请求超时（秒）",
+    "type": "int",
+    "default": 20,
+    "hint": "超时后本轮不算重置，下一轮再拉。"
+  },
+  "user_agent": {
+    "description": "请求 User-Agent",
+    "type": "string",
+    "default": "astrbot_plugin_codex_reset/0.1 (github.com/w1ndys)",
+    "hint": "来源要求服务端请求带可识别的 User-Agent。不要留空。"
+  }
+}
