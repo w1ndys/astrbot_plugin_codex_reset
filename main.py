@@ -21,7 +21,6 @@ from .business.groups import (
     switch_notice_text,
     update_group,
 )
-)
 from .business.poll import run_once, status_payload
 from .business.settings import platform_id, poll_seconds, timeout_seconds, user_agent
 from .data.client import ResetClient
