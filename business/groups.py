@@ -3,6 +3,7 @@
 from ..entity.constants import GROUP_ID_MAX_LEN, GROUP_ID_MIN_LEN, GROUP_MESSAGE_TYPE, REMARK_MAX_LEN
 from ..entity.record import ActionResult, GroupRow
 from ..data.group_store import GroupStore
+from .text import format_disabled, format_enabled
 
 
 def check_group_id(group_id: str) -> str:
@@ -117,6 +118,34 @@ def build_umo(platform_id: str, group_id: str) -> str:
     if not platform_id:
         return ""
     return platform_id + ":" + GROUP_MESSAGE_TYPE + ":" + group_id
+
+
+def stored_enabled(store: GroupStore, group_id: str) -> bool:
+    """改之前这个群开没开。没有记录就当关，新增时不会误发关闭通知。"""
+    row = store.get(group_id)
+    # 表里没有这一群，之前就是关着的
+    if row is None:
+        return False
+    return row.enabled
+
+
+def session_umo(row: GroupRow, platform_id: str) -> str:
+    """定位这个群的会话。关闭通知也要能发，所以不看开关。"""
+    # 已经见过群消息时，用真实会话，不自己拼
+    if row.umo:
+        return row.umo
+    return build_umo(platform_id, row.group_id)
+
+
+def switch_notice_text(was_enabled: bool, enabled: bool) -> str:
+    """开关变了才有群通知。只改备注不发，避免每次保存都刷群。"""
+    # 开关没变，不通知
+    if was_enabled == enabled:
+        return ""
+    # 从关到开，告诉群里已经开始监控
+    if enabled:
+        return format_enabled()
+    return format_disabled()
 
 
 def push_targets(rows: list, platform_id: str) -> list:

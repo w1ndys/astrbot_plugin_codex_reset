@@ -10,6 +10,9 @@ from astrbot_plugin_codex_reset.business.groups import (
     build_umo,
     delete_group,
     push_targets,
+    session_umo,
+    stored_enabled,
+    switch_notice_text,
     update_group,
 )
 from astrbot_plugin_codex_reset.data.group_store import GroupStore
@@ -66,6 +69,19 @@ class GroupTest(unittest.TestCase):
     def test_platform_id_with_colon_is_not_used(self):
         """平台 ID 含冒号时不拼会话，避免拆错。"""
         self.assertEqual(build_umo("bad:id", "123456"), "")
+
+
+    def test_enable_notice_only_on_change(self):
+        """从关到开有开启文案，再保存同一开关不再发。"""
+        self.assertIn("已开启", switch_notice_text(False, True))
+        self.assertIn("已关闭", switch_notice_text(True, False))
+        self.assertEqual(switch_notice_text(True, True), "")
+
+    def test_closed_group_still_has_session_for_notice(self):
+        """关掉之后仍能定位会话，否则关闭通知发不出去。"""
+        row = GroupRow("123456", "", False, "")
+        self.assertEqual(session_umo(row, "napcat"), "napcat:GroupMessage:123456")
+        self.assertFalse(stored_enabled(self.store, "123456"))
 
 
 if __name__ == "__main__":

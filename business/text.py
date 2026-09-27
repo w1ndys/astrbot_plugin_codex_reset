@@ -38,6 +38,16 @@ def format_forecast_move(old_at: str, new_at: str) -> str:
     )
 
 
+def format_enabled() -> str:
+    """本群刚被打开时发到群里的通知。"""
+    return "本群已开启 Codex 重置监控。\n之后出现已宣布的重置时，会在这里推送。\n" + attribution()
+
+
+def format_disabled() -> str:
+    """本群刚被关掉时发到群里的通知。"""
+    return "本群已关闭 Codex 重置监控。\n之后不会再推送重置消息。\n" + attribution()
+
+
 def show_probability(value: object) -> str:
     """概率只给页面看。没有就写未知，避免把空值显示成 None。"""
     # 来源这轮没给概率

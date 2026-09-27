@@ -119,11 +119,21 @@ function formatStatus(result) {
   return lines.join("\n");
 }
 
+function showNotice(result) {
+  // 通知没发出去时留在页面上，避免用户以为群里已经看到了。
+  const notice = result && result.notice ? String(result.notice) : "";
+  if (!notice) {
+    return;
+  }
+  showFormError(notice);
+}
+
+
 async function addGroup() {
   // 提交新增。失败只显示原因，不刷新成成功。
   showFormError("");
   try {
-    await bridge.apiPost("groups", {
+    const result = await bridge.apiPost("groups", {
       group_id: fieldValue(groupIdInput),
       remark: fieldValue(remarkInput),
       enabled: Boolean(enabledInput && enabledInput.checked),
@@ -131,6 +141,7 @@ async function addGroup() {
     groupIdInput.value = "";
     remarkInput.value = "";
     await loadGroups();
+    showNotice(result);
   } catch (error) {
     showFormError(errorText(error));
   }
@@ -140,12 +151,13 @@ async function saveRow(groupId, remark, enabled) {
   // 保存这一行的备注和开关。群号不变。
   showFormError("");
   try {
-    await bridge.apiPost("groups/update", {
+    const result = await bridge.apiPost("groups/update", {
       group_id: groupId,
       remark: String(remark || "").trim(),
       enabled: Boolean(enabled),
     });
     await loadGroups();
+    showNotice(result);
   } catch (error) {
     showFormError(errorText(error));
   }

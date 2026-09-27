@@ -16,7 +16,11 @@ from .business.groups import (
     push_targets,
     remember_origin,
     row_payload,
+    session_umo,
+    stored_enabled,
+    switch_notice_text,
     update_group,
+)
 )
 from .business.poll import run_once, status_payload
 from .business.settings import platform_id, poll_seconds, timeout_seconds, user_agent
@@ -147,7 +151,7 @@ class CodexResetPlugin(Star):
         return json_response({"groups": rows})
 
     async def page_add_group(self):
-        """页面新增一群。校验失败不写库。"""
+        """页面新增一群。校验失败不写库。开着就通知该群。"""
         payload = await request.json(default={})
         result = await add_group(
             self.groups,
@@ -158,21 +162,41 @@ class CodexResetPlugin(Star):
         # 不合格或重复时把原因还给页面
         if result.error:
             return error_response(result.error, status_code=400)
-        return json_response({"group": row_payload(result.row, platform_id(self.config))})
+        notice = await self._announce_switch(False, result.row)
+        return json_response(_saved_payload(result.row, platform_id(self.config), notice))
 
     async def page_update_group(self):
-        """页面改备注和开关。群号不变。"""
+        """页面改备注和开关。群号不变。开关变化时通知该群。"""
         payload = await request.json(default={})
+        group_id = str(payload.get("group_id", "")).strip()
+        was_enabled = stored_enabled(self.groups, group_id)
         result = await update_group(
             self.groups,
-            str(payload.get("group_id", "")).strip(),
+            group_id,
             str(payload.get("remark", "")).strip(),
             _read_enabled(payload, False),
         )
-        # 没有这个群或备注不合法时不改库
+        # 没有这个群或备注不合法时不改库，也不发通知
         if result.error:
             return error_response(result.error, status_code=400)
-        return json_response({"group": row_payload(result.row, platform_id(self.config))})
+        notice = await self._announce_switch(was_enabled, result.row)
+        return json_response(_saved_payload(result.row, platform_id(self.config), notice))
+
+    async def _announce_switch(self, was_enabled: bool, row) -> str:
+        """开关变了就发到该群。发不出时返回页面上要显示的说明。"""
+        text = switch_notice_text(was_enabled, row.enabled)
+        # 只改备注不发，避免每次保存都刷群
+        if not text:
+            return ""
+        umo = session_umo(row, platform_id(self.config))
+        # 没有会话就无法告知，状态仍然已经保存
+        if not umo:
+            return "群状态已保存，但没有可用会话，群里没有发出通知。请先填写平台 ID。"
+        try:
+            await self.context.send_message(umo, MessageChain().message(text))
+        except Exception as exc:
+            return "群状态已保存，但通知发送失败：" + type(exc).__name__
+        return ""
 
     async def page_delete_group(self):
         """页面删除一群。"""
@@ -194,3 +218,8 @@ def _read_enabled(payload: dict, default: bool) -> bool:
     if "enabled" not in payload:
         return default
     return bool(payload.get("enabled"))
+
+
+def _saved_payload(row, platform: str, notice: str) -> dict:
+    """保存成功后给页面的结果。notice 非空表示群里没通知到。"""
+    return {"group": row_payload(row, platform), "notice": notice}
