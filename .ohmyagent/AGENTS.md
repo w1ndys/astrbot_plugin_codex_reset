@@ -27,6 +27,6 @@ skill 原文写的是 opt-in，本仓库把它当成默认开发要求，不需�
 | 层 | 目录 | 职责 |
 |---|---|---|
 | 实体 | `entity/` | 固定值和数据形状 |
-| 数据 | `data/`、`_shared/` | SQLite、公开接口读取 |
+| 数据 | `data/` | SQLite、公开接口读取；连库建表放 `data/db.py` |
 | 业务 | `business/` | 重置判定、群数据校验、文案 |
 | 入口 | `main.py`、`pages/` | WebUI 增删改查和轮询推送 |

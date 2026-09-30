@@ -1,4 +1,5 @@
-# _shared 数据层：本插件内共用的 SQLite 连接。表结构留在各自的 store 里。
+# 数据层：本插件 SQLite 怎么连、怎么建表。
+# 表结构和业务 SQL 留在各自的 data/*_store.py 里。
 
 import sqlite3
 from pathlib import Path

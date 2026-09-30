@@ -3,8 +3,8 @@
 import asyncio
 from pathlib import Path
 
-from .._shared.db import connect, create_table
 from ..entity.record import SeenState
+from .db import connect, create_table
 
 CREATE_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS seen_state (
