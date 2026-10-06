@@ -9,7 +9,7 @@ AstrBot 插件 `astrbot_plugin_codex_reset` `0.1.0`。只读请求 [codex-reset.
 - 按配置间隔轮询 `/api/timeline` 和 `/api/forecast`。两个接口都成功才判定。
 - 已宣布的新重置，或 `last_reset_at` 向前移动，推送到已开启且能定位会话的群。
 - 第一次成功拉取只记下当前最新位置，不推历史。
-- 插件页面可以新增、修改、删除监控群，并查看最近一轮轮询。
+- 插件页面 `pages/monitor/` 有两个 Tab：监控群、轮询状态。可以新增、修改、删除监控群，并查看最近一轮轮询。
 - 群从关到开，或从开到关，会在该群发一条状态通知。只改备注不发。
 
 ## 用到的字段
@@ -41,6 +41,17 @@ AstrBot 插件 `astrbot_plugin_codex_reset` `0.1.0`。只读请求 [codex-reset.
 没在表里的群不会收到推送。关闭的群不接收重置推送；关掉的当下仍会收到一条关闭通知。
 
 会话串格式是 `平台ID:GroupMessage:群号`。插件配置里的 OneBot 平台实例 ID 不含冒号。填了之后，开启的群可以不先说话就推。留空时，要等这个群先来一条消息，插件记下真实会话后再推。发不出通知时，页面会写明群状态已保存，但群里没有发出通知。
+
+## 插件页面
+
+源码在 `dashboard/`，React 19 + antd 6 + Vite 8 + TypeScript 6（不引 Tailwind）。打包成一份 IIFE 输出到 `pages/monitor/`，宿主只加载产物，运行时不需要 Node。构建用 Node 24 LTS。
+
+- 监控群：表格列出群号、备注、推送开关、已记录会话、能否推送，行内改完点保存；上方一行加新群。
+- 轮询状态：只读最近一轮的结果，不额外请求来源。
+
+主题跟随宿主注入的 `<html data-theme>`，用 antd 的明暗算法；时间按访问者本地时区显示并标出偏移，悬停可以看到后端 UTC 原值。
+
+改前端后执行 `cd dashboard && npm install && npm run build`，把 `pages/monitor/` 一并提交。`build` 先跑 `tsc --noEmit`；打包插件会把 `type="module"` 改写成 `defer` 并去掉 `crossorigin`。
 
 ## 安装
 

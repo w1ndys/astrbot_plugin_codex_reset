@@ -1,0 +1,26 @@
+/* 页面层：外壳样式。组件外观交给 antd，这里只留外框和两段说明文字。 */
+
+html[data-theme="dark"] body {
+  background: #141414;
+}
+
+body {
+  background: #f5f5f5;
+}
+
+.page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.hint {
+  margin: 0 0 1rem;
+  line-height: 1.6;
+  opacity: 0.78;
+}
+
+.section {
+  margin-bottom: 1.25rem;
+}

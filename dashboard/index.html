@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- 页面层构建入口。产物进 pages/monitor/，宿主只加载产物，不加载本文件。 -->
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex 重置监控</title>
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+      }
+      /* 移动端 Tab 条支持横向滑动，隐藏默认滚动条 */
+      .ant-tabs-nav-wrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+      }
+      .ant-tabs-nav-wrap::-webkit-scrollbar {
+        display: none !important;
+      }
+    </style>
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var theme = params.get("theme");
+          var isDark = false;
+          if (theme === "dark" || params.get("isDark") === "true") {
+            isDark = true;
+          } else if (theme === "light" || params.get("isDark") === "false") {
+            isDark = false;
+          } else {
+            isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          }
+          // 先把底色铺上，避免首屏白闪
+          document.documentElement.style.background = isDark ? "#141414" : "#f5f5f5";
+        } catch (error) {
+          document.documentElement.style.background = "#f5f5f5";
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.tsx"></script>
+  </body>
+</html>
