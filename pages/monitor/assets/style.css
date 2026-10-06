@@ -1,2 +1,2 @@
-html[data-theme=dark] body{background:#141414}body{background:#f5f5f5}.page{box-sizing:border-box;max-width:72rem;margin:0 auto;padding:12px}.hint{opacity:.78;margin:0 0 1rem;line-height:1.6}.section{margin-bottom:1.25rem}
+body{background:#f5f5f5}body.is-dark{background:#141414}.page{box-sizing:border-box;max-width:72rem;margin:0 auto;padding:12px}.hint{opacity:.78;margin:0 0 1rem;line-height:1.6}.section{margin-bottom:1.25rem}
 /*$vite$:1*/

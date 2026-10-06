@@ -1,11 +1,12 @@
 /* 页面层：外壳样式。组件外观交给 antd，这里只留外框和两段说明文字。 */
 
-html[data-theme="dark"] body {
-  background: #141414;
-}
-
+/* 页面底色。首屏由 index.html 的内联脚本先铺上，这里的 is-dark 与页面 JS 同步。 */
 body {
   background: #f5f5f5;
+}
+
+body.is-dark {
+  background: #141414;
 }
 
 .page {
